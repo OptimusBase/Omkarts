@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load staticfiles carts_custom_filter %}
+
+{% block content %}
+
+<div class="container">
+	<div class="row">
+		<h1>Shopping Cart</h1>
+		<div class="col-md-6 row" style="background-color: #fff; box-shadow: 0 0 4px #d3cbb8; padding: 20px 20px 20px 20px; margin-bottom: 40px;">
+		{% if cart %}
+			{% for item in cart.cartitem_set.all|filter_active_cartitem %}
+				<div class="row" style="padding-bottom: 20px;">
+					<div class="col-md-2">
+
+						{% for variation in item|items %}
+							{% for img in variation.productimage_set.all|filter_product_images:variation.product %}
+								<a href='{% url "single_product" variation.product.slug variation.id %}'>
+									<img src="{{ MEDIA_URL }}{{ img }}" style="width: 70px; height: 70px;">
+								</a>
+							{% endfor %}
+						{% endfor %}
+
+					</div>
+
+
+					<div class="col-md-8 row">
+						<div class="col-md-12">
+							<p><strong><a href="{% url "single_product" item.variation.product.slug item.variation.id %}">{{item.variation.product.title}}</a></strong></p>
+							<p><strong>{{item.variation.price}}</strong> INR</p>
+						</div>
+						<hr><hr><hr>
+
+						<div class="col-md-6">
+							{% if item.variation.color %}<p>Color: </p>{% endif %}
+							{% if item.variation.storage %}<p>Storage: </p>{% endif %}
+							{% if item.variation.screen_size %}<p>Screen Size: </p>{% endif %}
+						</div>
+
+						<div class="col-md-6">
+						{% if item.variation.color %}<p>{{item.variation.color}}</p>{% endif %}
+						{% if item.variation.storage %}<p>{{item.variation.storage}}</p>{% endif %}
+						{% if item.variation.screen_size %}<p>{{item.variation.screen_size}}</p>{% endif %}
+						</div>
+						
+					</div>
+
+					<div class="col-md-2">
+						<p>Qty: <span>{{item.quantity}}</span></p>
+					</div>
+
+					<div class="col-md-12">
+						<a href="{% url "remove_from_cart" item.id %}">Remove</a>
+					</div>
+
+				</div>
+				<hr>
+			{% endfor %}
+		{% endif %}
+		</div>
+
+		<div class="col-md-2"></div>
+
+		<div class="col-md-4">
+			<h1>Total: {{ cart.total }} INR</h1>
+			<a href='{% url "checkout" %}'><button class="btn btn-success btn-block" href='{% url "checkout" %}'>Proceed to checkout</button></a>
+		</div>
+	</div>
+
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
+

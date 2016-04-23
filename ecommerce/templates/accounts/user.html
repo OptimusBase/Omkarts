@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+{% load staticfiles accounts_custom_filter %}
+{% block content %}
+	{% if  current_addresses %}
+		<div class="row" style="margin: 30px 0px 30px 0px;">
+			<div id="sidebar" class="col-md-2 col-lg-3">
+				<div class="list-group">
+				  <a href="#" class="list-group-item active">
+				    {{request.user.username}}
+				    <br>
+				    {{request.user.email}}
+				  </a>
+				  <div class="custom_sidebar" style="padding-top: 20px;">
+					  <a href="{% url "user_orders" %}" class="list-group-item 1">My Orders</a>
+					  <a href="{% url "view_user_address" %}" class="list-group-item 2">My Addresses</a>
+					  <a href="{% url "view_wist_list" %}" class="list-group-item 3">Wish List</a>
+					  <a href="{% url "account_settings" %}" class="list-group-item 4">Account Settings</a>
+				  </div>
+				</div>
+			</div>
+
+			
+				
+				<div class="col-md-10 col-md-9 shipping-address" style="background: #FFF; padding: 30px 40px 30px 40px;">
+					
+					<p class="row">
+						<strong class="col-md-6 col-lg-6">Shipping Address</strong>
+						<a href="{% url "add_user_address" %}"><button class="btn btn-default pull-right" href='{% url "add_user_address" %}' id='addShippingAddress'>Create New Address</button></a>
+					</p>
+					<form class="form-horizontal" role="form">
+						{% for current_address in current_addresses%}
+							<div class="row">
+								<input type="radio" {% if primary_address.shipping.id == current_address.id %}checked="checked"{% endif %} name="address" value="{{current_address.id}}" class="col-md-1 shipping_address" id="{{current_address.id}}">
+								<img id="shipping_address_loader" src="{% static 'img/loader.gif' %}" style="display: none;" />
+								<div class="col-md-11">
+										<p>{{current_address.name}} <strong class="primary-address" id="primary-address-{{current_address.id}}">{% if primary_address.shipping.id == current_address.id %}(Primary){% endif %}</strong></p>
+										<p>{{current_address.address}}{{current_address.address2}}</p>
+										<p>{{current_address.city}}, {{current_address.state}}, {{current_address.country}}</p>
+										<p>{{current_address.address}}</p>
+										<p>+91 {{current_address.phone}}</p>
+										<a href="#" style="float: left;">Edit</a>|
+										<a href="#">Delete</a>
+										<br><br>
+									
+								</div>
+							</div>
+						{% endfor %}
+						
+					</form>
+				</div>
+		</div>
+	
+
+	{% elif wish_list %}
+		
+
+		<div class="row" style="margin: 30px 0px 30px 0px;">
+			<div id="sidebar" class="col-md-2 col-lg-3">
+				<div class="list-group">
+				  <a href="#" class="list-group-item active">
+				    {{request.user.username}}
+				    <br>
+				    {{request.user.email}}
+				  </a>
+				  <div class="custom_sidebar" style="padding-top: 20px;">
+					  <a href="{% url "user_orders" %}" class="list-group-item 1">My Orders</a>
+					  <a href="{% url "view_user_address" %}" class="list-group-item 2">My Addresses</a>
+					  <a href="{% url "view_wist_list" %}" class="list-group-item 3">Wish List</a>
+					  <a href="{% url "account_settings" %}" class="list-group-item 4">Account Settings</a>
+				  </div>
+				</div>
+			</div>
+				
+				<div class="col-md-10 col-md-9 shipping-address" style="background: #FFF; padding: 30px 40px 30px 40px;">
+						{% for item in wish_list %}
+						{% if item.active %}	
+							<div class="row" style="padding-bottom: 50px; border-bottom: 1px solid #eee; margin-bottom: 10px;">
+								<div class="col-md-2">
+									{% for variation in item|wishlist_item %}
+										{% for img in variation.productimage_set.all|filter_product_images:variation.product %}
+											<a href="{% url "single_product" variation.product.slug variation.id %}">
+												<img src="{{ MEDIA_URL }}{{ img }}" style="width: 70px; height: 70px;">
+											</a>
+										{% endfor %}
+									{% endfor %}
+								</div>
+								<div class="col-md-7 row">
+										
+										<div class="col-md-6">
+											<p><a href='{% url "single_product" item.variation.product.slug item.variation.id %}'>{{item.product.title}}</a></p>
+											<p><strong>Rs. {{item.variation.price}}</strong></p>
+										</div>
+										<div class="col-md-6">
+											<p><strong>{{item.variation.color}}, {{item.variation.storage}}, {{item.variation.screen_size}}</strong></p>
+										</div>
+										
+								</div>
+								<div class="col-md-3">
+									{% for variation in item|wishlist_item %}
+										<form method='POST' action='{% url "add_to_cart" variation.product.slug %}'>{% csrf_token %}
+											<input class='btn btn-default btn-md btn-block' type='submit' value='Add to cart'>
+											<input class='form-control' name="qty" type="number" value='1' style="display: none;">
+
+											<input class='form-control' name='variation-form' type="number" value='{{ variation.id }}' style="display: none;">
+										</form>
+
+										<a href="{% url 'remove_from_wishlist' variation.product.slug variation.id %}"><button class="btn btn-default btn-md btn-block" onclick="this.blur();">Remove from Wish List</button></a>
+									{% endfor %}
+								</div>
+							</div>
+							<br>
+							<br>
+						{% endif %}
+						{% endfor %}
+
+				</div>
+		</div>
+	{% else %}
+	{% endif %}
+{% endblock %}
+
+
+<script type="text/javascript">
+{% block jquery %}
+
+	$(".shipping_address").click(function(e){
+	  // e.preventDefault()
+	  var mForm = $('input[type=radio][name=address]:checked').attr('id')
+	  $('#shipping_address_loader').show();
+	 $.ajax({
+	      type: "POST",
+	      url: "{% url 'update_default_address' %}",
+	      data: {
+                "radio_id": mForm,
+                "csrfmiddlewaretoken": "{{ csrf_token }}",
+              },
+	      success: function(data){
+	        console.log(data)
+
+	        $(".primary-address").html("")
+	        $("#primary-address-"+data).html("(Primary)")
+	        //  $("#marketingModal").modal("hide");
+	      },
+	      error: function(data){
+	        var obj = data.responseJSON
+	      },
+	   });
+	 setTimeout(
+  function() 
+  {
+    $('#shipping_address_loader').hide();
+  }, 500);
+	});
+
+
+$(function() {
+  debugger;
+  var loc = window.location.href; // returns the full URL
+  if(/wistlist/.test(loc)) {
+    $(".1").removeClass("active");
+    $(".2").removeClass("active");
+    $(".3").addClass("active");
+    $(".4").removeClass("active");
+  }
+
+  if(/address/.test(loc)) {
+    $(".1").removeClass("active");
+    $(".2").addClass("active");
+    $(".3").removeClass("active");
+    $(".4").removeClass("active");
+  }
+});
+
+
+
+// $(".1").click(function(){
+//     $(".1").addClass("active");
+//     $(".2").removeClass("active");
+//     $(".3").removeClass("active");
+//     $(".4").removeClass("active");
+// });
+
+// $(".2").click(function(){
+//     $(".1").removeClass("active");
+//     $(".2").addClass("active");
+//     $(".3").removeClass("active");
+//     $(".4").removeClass("active");
+// });
+
+// $(".3").click(function(){
+//     $(".1").removeClass("active");
+//     $(".2").removeClass("active");
+//     $(".3").addClass("active");
+//     $(".4").removeClass("active");
+// });
+
+// $(".4").click(function(){
+//     $(".1").removeClass("active");
+//     $(".2").removeClass("active");
+//     $(".3").removeClass("active");
+//     $(".4").addClass("active");
+// });
+
+
+
+{% endblock %}
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

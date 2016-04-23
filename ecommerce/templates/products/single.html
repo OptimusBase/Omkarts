@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+{% load staticfiles products_custom_filter %}
+<div class="page-header">
+	
+</div>
+
+{% block content%}
+
+
+
+<div class="container data-wrapper" /*style="padding-left: 100px; padding-right: 110px;"*/ >
+	
+
+	<div class="row">
+		<h3 class="col-md-6">{{ product.title }}</h3>
+	</div>
+	<div class="row">
+		<p1 class="col-md-6">by  {{product.brand}}, {{product.sub_category_child}}</p1>
+
+	</div><br>
+
+	<div class="row" >
+
+		<div class="col-md-7">
+
+			<div class="col-md-12" style="width: 500px; background-color: #fff; box-shadow: 0 0 4px #d3cbb8; padding: 30px 30px 30px 30px;">
+				<!--bootstarp carousel -->
+
+				<div class="" style=''>
+				    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+
+				      <!-- Wrapper for slides -->
+				      <div class="carousel-inner" role="listbox" style="">
+				    
+				        {% for img in variation.productimage_set.all|filter_product_images_2:variation.product %}
+					        
+					          <div class="item {% if forloop.first %}active{% endif %}">
+					          	<img class="img-responsive" style="max-height: 400px; display: block; margin-left: auto; margin-right: auto;" src="{{ MEDIA_URL }}{{ img }}">
+					          </div>
+					        
+				        {% endfor %}
+				      </div>
+				    </div>
+				    <div class="" style="margin-left: 17px; margin-top: 31px;">
+					    {% for img in variation.productimage_set.all|filter_product_images_2:variation.product %}
+				    		<span style="margin-right: 10px;">
+						    <a class="" data-target="#carousel-example-generic" role="button" data-slide-to="{{ forloop.counter|add:"-1" }}">
+							    <img src='{{ MEDIA_URL }}{{ img }}' style="width: 50px; height: 50px;">
+							</a>
+							</span>
+						{% endfor %}
+					</div>
+				</div>
+				<!-- carousel ends here -->
+			</div>
+		</div>
+
+		
+
+
+		<div class="col-md-5" style="background-color: #fff; box-shadow: 0 0 4px #d3cbb8; width: 474px; padding-bottom: 30px;">
+
+			<div class="col-md-6">
+				<h1 id="update-price"></h1>
+				<p id="update-stock"></p>
+				<!--<p>rs.12000</p>-->
+			</div>
+
+			<div class="col-md-6">
+				<!--<p>you save rs.1000</p>-->
+				
+			</div>
+
+			<div class="col-md-12">
+			<form action="{% url 'get_product_variation_price' %}" id="product-variation-form">
+				{% csrf_token %}
+					<label>Variation</label><select name="variation" id="variant" class="form-control" id="sel1">
+						
+						<option id="{{variation.id}}" value="{{variation.id}}">{% if variation.color %}{{variation.color}}{% endif %}{% if variation.storage %}, {{variation.storage}}{% endif %}{% if variation.screen_size %}, {{variation.screen_size}}{% endif %}</option>
+						
+						{% for variant in variations %}
+							{% if variant.id != variation.id %}
+								<option id="{{variant.id}}" value="{% url "single_product" variant.product.slug variant.id %}">{% if variant.color %}{{variant.color}}{% endif %}{% if variant.storage %}, {{variant.storage}}{% endif %}{% if variant.screen_size %}, {{variant.screen_size}}{% endif %}</option>
+							{% endif %}
+						{% endfor %}
+					</select>
+			</form>
+			</div>
+
+			<div class="col-md-12">
+				<form method='POST' action='{% url "add_to_cart" product.slug  %}'>{% csrf_token %}
+					<label>Quantity</label><input class='form-control' name="qty" type="number" value='1'>
+					<br>
+					<input id="add-to-cart" class='btn btn-success btn-block' type='submit' disabled value='Add to cart'>
+					<br>
+
+					<select class='form-control' name='variation-form' id="variation-form-id" style="display: none;">
+						<option id="option-1" value='' selected></option>
+					</select>
+				</form>
+
+				<form id="wishList" action='{% url "add_wish_list" %}'>{% csrf_token %}
+					<input class="btn btn-default btn-block glyphicon glyphicon-heart AddWishList" id="" onclick="this.blur();" value="Add to Wishlist">
+				</form>
+
+				<div class="alert alert-success fade in MsgWishList" style="display: none; position: fixed; top: 143px;">
+					<a href="#" class="close" style="padding-left: 14px;" data-dismiss="alert" aria-label="close">&times;</a>
+					<strong id="MsgWishList"></strong>
+				</div>
+				
+			</div>
+
+
+
+		</div>
+
+	</div>
+
+	<img id="loader" src="{% static 'img/loader.gif' %}" style="position: absolute; margin: -325px 873px; display: none;" />
+
+	<div style="margin-bottom: 50px;">
+
+		{% if popular_products.count > 0 %}
+		<h3>Popular Products</h3>
+		<div class="owl-carousel popular-products">
+		  {% for product in popular_products|filter_popular_products %}
+		      <div class="item thumbnail" style="padding: 20px 20px 20px 20px; max-height: 450px; min-height: 350px;">
+		        <a href='{% url "single_product" product.variation.product.slug product.variation.id %}' style="text-decoration: none; color: black;">
+		          
+		          
+		          	{% for img in variation.product.productimage_set.all|filter_product_images:variation.product %}
+		            	<img class="img-responsive" style="height: 200px; background-size: cover; background-repeat: no-repeat; background-position: center;" src='{{ MEDIA_URL }}{{ product.variation|get_thumbnail_img }}'>
+		          	{% endfor %}
+		     		
+		     		<br>
+		            <h6 style="text-align: center;">{{ variation.product.title|truncatechars:60 }}</h6>
+		            <h5 style="text-align: center;">Rs.<strong> {{ variation.price }}</strong></h5>
+		          
+
+		        </a>
+		      </div>
+		  {% endfor %}
+		</div>
+		{% endif %}
+
+
+		<h3 class="uppercase">PRODUCT INFORMATION</h3>
+		<div class="" style="background-color: #fff; box-shadow: 0 0 4px #d3cbb8;">
+			<div class="row" style="margin-left: 10px;">
+				{% if variation.pdpspecification_set.all %}<h4>SPECIFICATIONS</h4>{% endif %}
+				{% for item in variation.pdpspecification_set.all %}
+					{% if forloop.counter <= 4%}
+					{% if item.active %}
+						<p class="col-md-3" style="float: left;">{{item.specification_type}}</p> <p class="col-md-9">{{item.specification_value}}</p>
+					{% endif %}
+					{% endif %}
+				{% endfor %}
+
+				
+				<div id="demo" class="collapse">
+					{% for item in variation.pdpspecification_set.all %}
+						{% if forloop.counter > 4%}
+						{% if item.active %}
+				    		<p class="col-md-3" style="float: left;">{{item.specification_type}}</p> <p class="col-md-9">{{item.specification_value}}</p>
+			    		{% endif %}
+			    		{% endif %}
+		    		{% endfor %}
+		  		</div>
+		  		<a style="margin-left: 15px;" data-toggle="collapse" data-target="#demo">Read More</a>
+				<hr>
+
+		  		{% if variation.pdpdescription_set.all %}<h4>DESCRIPTION</h4>{% endif %}
+		  		{% for item in variation.pdpdescription_set.all %}
+		  			{% if item.active %}
+						<p class="col-md-12" style="">{{item.description}}</p>
+						<hr>
+					{% endif %}
+				{% endfor %}
+				
+				{% if variation.pdpphysicalfeature_set.all %}<h4>PHYSICAL FEATURES</h4>{% endif %}
+		  		{% for item in variation.pdpphysicalfeature_set.all %}
+		  			{% if item.active %}
+		  				<img src="{{ MEDIA_URL }}{{item.key_feature_image}}">
+					{% endif %}
+				{% endfor %}
+				<hr>
+
+				{% if variation.pdpkeyfeature_set.all %}<h4>KEY FEATURES</h4>{% endif %}
+		  		<div class="row">
+		  			{% for item in variation.pdpkeyfeature_set.all %}
+					
+						{% if item.active %}
+							<div class="col-md-4">
+								{% if item.icon_type == "Google" and item.icon_class != None %}<i class="material-icons" style="float: left;">{{item.icon_class}}</i>{% endif %}<p style=""><span class="{% if item.icon_type == "Font-Awesome" %}{{item.icon_class}}{% endif %}"></span> {{item.title}}</p>
+							</div>
+						{% endif %}
+					{% endfor %}
+				</div>
+				<hr>
+				
+				
+
+		  		{% for item in variation.pdpfeatured_set.all|sort %}
+		  			{% if forloop.counter|divisibleby:2 %}
+		  			{% if item.active %}
+		  				<div class="row">
+		  					<div class="col-md-6">
+		  						<h4 style="">{{item.header}}</h4>
+								<p class="col-md-12" style="">{{item.description}}</p>
+		  					</div>
+		  					<div class="col-md-6">
+		  						<img class="img-responsive row" src="{{ MEDIA_URL }}{{item.featured_image}}">
+		  					</div>
+		  				</div>
+		  				<br>
+		  				<br>
+					{% endif %}
+					{% else %}
+					{% if item.active %}
+		  				<div class="row">
+		  					<div class="col-md-6">
+		  						<img class="img-responsive" src="{{ MEDIA_URL }}{{item.featured_image}}">
+		  					</div>
+		  					<div class="col-md-6">
+		  						<h4 style="">{{item.header}}</h4>
+								<p class="col-md-12" style="">{{item.description}}</p>
+		  					</div>
+		  				</div>
+		  				<br>
+		  				<br>
+					{% endif %}
+					{% endif %}
+
+				{% endfor %}
+
+			</div>
+
+
+			
+		</div>
+	</div>
+
+
+</div>
+<script type="text/javascript" src="{% static 'js/single.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/owl.carousel.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'css/owl.theme.default.min.css' %}"/>
+
+<script type="text/javascript" src="{% static 'js/owl.carousel.min.js' %}"></script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

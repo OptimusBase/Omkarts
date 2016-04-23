@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>{% block head_title %}{% endblock %}Omkart's Store</title>
+    <link rel='stylesheet' href='{% static "css/bootstrap.min.css" %}' />
+
+    <link rel='stylesheet' href='{% static "css/bootstrap-theme.min.css" %}' />
+    
+    <!--Icon Cdn links -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+
+    <!--Owl Carousel Cdn links -->
+    <link rel="stylesheet" href="{% static "css/owl.carousel.css" %}">
+
+
+	<style>
+    {% block styles %}
+    {% endblock %}
+
+  </style>
+    {% block styles_links %}
+    {% endblock %}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+
+    <script src="http://getbootstrap.com/assets/js/ie-emulation-modes-warning.js"></script>
+
+    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+  </head>
+
+  <body class='body'>
+
+
+
+  {% if request.session.marketing_message %}
+    <div class='alert alert-top-message alert-dismissible' role='alert'>
+      <button id="marketing-message-btn" type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <div class="container">
+          <h3>{{ request.session.marketing_message|safe }}</h3>
+        </div>
+    </div>
+  {% endif %}
+
+  {% include  'navbar.html' %}
+
+  
+
+    <div class="container-fluid" id="bootstrap_override_container_fluid">
+      {% if messages %}
+      {% for message in messages %}
+        <div class='alert {% if "success" in message.tags %}alert-success{% elif "warning" in message.tags %}alert-warning{% elif "error" in message.tags %}alert-danger{% endif %} alert-dismissible ' role='alert'>
+          <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <ul class=="messages">
+            <li>{% if "safe" in message.tags %}{{ message|safe }}{% else %}{{message}}{% endif %}</li>
+          </ul>
+        </div>
+      {% endfor %}
+      {% endif %}
+
+      {% block jumbotron %}
+      {% endblock %}
+
+    	{% block content %}
+
+    	{% endblock %}
+
+      {% include "modal.html" %}
+
+    </div> <!-- /container -->
+
+
+  </body>
+
+
+<footer id="footer" class="footer">
+  <div class="footer_div_1">
+      <table class="container">
+        <tr>
+          <th>POPULAR SEARCHES</th>
+          <th>MY ACCOUNT</th>
+          <th>BUYING ON Omkarts.com</th>   
+          <th>CUSTOMER SERVICE</th>
+        </tr>
+        <tr>
+          <td><a href="#">White Friday</a></td>
+          <td><a href="#">Log In / Register</a></td>
+          <td><a href="#">How to Buy</a></td>
+          <td><a href="#">Contact us</a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Iphone se</a></td>
+          <td><a href="#">My Shopping Cart</a></td>
+          <td><a href="#">Easy Payment Plans</a></td>
+          <td><a href="#">(+971)-4-437 0900</a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Samsung Galaxy S6</a></td>
+          <td><a href="#">My Orders</a></td>
+          <td><a href="#">Return Policy</a></td>
+          <td><a href="#">Daily, 8 AM to 10 PM</a></td>
+          
+        </tr>
+        <tr>
+          <td></td>
+          <td><a href="#">My Addresses</a></td>
+          <td><a href="#">FAQs</a></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><a href="#">Wish Lists</a></td>
+          <td><a href="#">Advertise with us</a></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><a href="#">Account Settings</a></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><a href="#">Account Summary</a></td>
+        </tr>
+        <tr>
+          <td></td>
+          <th class="INTELLECTUAL_PROPERTY">INTELLECTUAL PROPERTY</th>
+        </tr>
+        <tr>
+          <td></td>
+          <td><a href="#">Brand and Copyright Owners</a></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><a href="#">Marketplace Sellers</a></td>
+        </tr>
+      </table>
+  </div>
+  <div class="footer_div_2">
+    <strong class="container" >© 2016 Souq.com</strong>
+    <div class="row container">
+                    <a class="col-md-2" href="http://uae.souq.com/ae-en/about-us/c/">About us</a>
+                    <a class="col-md-2" href="http://pr.souq.com/">Media Center</a>
+                    <a class="col-md-2" href="http://uae.souq.com/ae-en/why-souq/c/">Careers</a>
+                    <a class="col-md-2" href="http://uae.souq.com/ae-en/privacy-policy/c/">Privacy policy</a>
+                    <a class="col-md-2" href="http://uae.souq.com/ae-en/terms-and-conditions/c/">Terms and conditions</a>
+                    <a class="col-md-2" href="https://affiliates.souq.com/">Affiliate Program</a>
+    </div>
+    <div class="row container">
+          <br>        
+                    <a class="col-md-2" href="http://uae.souq.com/">INDIA</a>
+                    <a class="col-md-2" href="http://uae.souq.com/">UAE</a>
+                    <a class="col-md-2" href="http://egypt.souq.com/">Egypt</a>
+                    <a class="col-md-2" href="http://saudi.souq.com/">Saudi</a>
+                    <a class="col-md-2" href="http://kuwait.souq.com/">Kuwait</a>
+    </div>
+  </div>
+
+</footer>
+
+<script>
+  $(document).ready(function(){
+        $("#marketing-message-btn").click(function(){
+         $.ajax({
+              type: "POST",
+              url: "{% url 'dismiss_marketing_message' %}",
+              data: {
+                "dimiss-marketing": true,
+                "csrfmiddlewaretoken": "{{ csrf_token }}",
+              },
+              success: function(data){
+              },
+              error: function(){
+                alert("Error! Something wrong. Please try again later")
+              },
+           });
+        });
+
+       {% if not request.user.is_authenticated and not request.session.email_added_marketing and not "accounts" in request.get_full_path %}
+        function showModal(){
+          $("#marketingModal").modal("show");
+          // setTimeout(showModal, 5000);
+        }
+        // showModal()
+        setTimeout(showModal, 5000);
+        $("#sendMarketingForm").click(function(e){
+          e.preventDefault()
+          var mForm = $("#sendForm").serialize()
+         $.ajax({
+              type: "POST",
+              url: "{% url 'ajax_email_signup' %}",
+              data: mForm,
+              success: function(data){
+                // console.log(data)
+                $("#modalMessage").html("<p>" + data + "</p>")
+                 $("#marketingModal").modal("hide");
+              },
+              error: function(data){
+                // console.log(data)
+                // console.log(data.responseJSON)
+                var obj = data.responseJSON
+                // console.log(obj)
+                // console.log(obj.email)
+                $("#modalMessage").html("<p style='color:red;'>" + obj.email + "</p>")
+              },
+           });
+        });
+        {% endif %}
+    });
+</script>
+
+
+<script>
+  $(document).ready(function() {
+      // body...
+      {% block jquery%}
+      {% endblock %}
+
+  });
+</script>
+
+{% block jquery_links %}
+{% endblock %}
+
+
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+
+
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="{% static 'js/owl.carousel.min.js' %}"></script>
+</html>

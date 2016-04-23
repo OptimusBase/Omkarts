@@ -1,0 +1,46 @@
+.orders{
+	background: #FFF;
+	padding: 30px 40px 30px 40px;
+	box-shadow: 0 0 4px #d3cbb8;
+}
+
+#side_bar_wrapper{
+	margin: 30px 0px 30px 0px;
+}
+
+.custom_sidebar{
+	padding-top: 20px;
+
+}
+
+#order_product_image{
+	margin: 10px 0px 0px 20px;
+	width: 100px;
+    height: 100px;
+}
+
+.order_id_total{
+	background-color: #EEE;
+	margin: 0px -15px 0px -15px;
+	padding: 7px 0px 7px 15px;
+}
+
+.order_details{
+	margin-bottom: 10px;
+}
+
+.product_img{
+	padding-bottom: 50px;
+}
+
+.product_name{
+	margin: 40px -40px -34px 25px;
+}
+
+.product_price{
+	margin: 40px 0px 0px 0px;
+}
+
+.product_date{
+	margin: 40px 0px 0px 0px;
+}

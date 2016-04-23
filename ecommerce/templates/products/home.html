@@ -1,0 +1,265 @@
+{% extends "base.html" %}
+{% load staticfiles products_custom_filter %}
+{% block head_title %}
+
+	Welcome to
+{% endblock %}
+
+
+{% block styles %}
+	// .jumbotron{
+	//	color: red;
+//}
+.owl-item{
+  //margin-right: 0px !important;
+}
+
+.owl-carousel {
+position: relative;
+}
+.owl-prev,
+.owl-next {
+position: absolute;
+top: 50%;
+margin-top: -10px; // Half of the prev/next buttons height here in negatives to center them perfectly
+
+}
+.owl-prev {
+left: 0;
+}
+.owl-next {
+right: 0;
+}
+{% endblock %}
+
+{% block jquery%}
+	// alert('welcome')
+{% endblock %}
+
+{# Comments here #}
+
+{% block jumbotron %}
+<script>
+  var idx=window.location.toString().indexOf("#_=_"); if (idx>0) { window.location = window.location.toString().substring(0, idx); }
+</script>
+
+<!-- Dropdown Section -->
+<div>
+<nav class="navbar navbar-default">
+  <div class="container">
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+      {% for cat in sub_cat_parent %}
+      <ul class="nav navbar-nav navbar-left">
+       {% if forloop.first %} <li><a href="{% url 'all_categories' %}">All Categories</a></li>{% endif %}
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ cat.sub_cat_parent_name }}</a>
+          <ul class="dropdown-menu">
+            {% for sub_cat in cat.subcategorychild_set.all %}
+              <li><a href="{% url "category_page" sub_cat.slug %}">{{sub_cat.sub_cat_child_name}}</a></li>
+            {% endfor %}
+            <!-- <li role="separator" class="divider"></li> -->
+          </ul>
+        </li>
+      </ul>
+      {% endfor %}
+    </div>
+  </div>
+</nav>
+</div>
+<!-- dropdown ends here-->
+
+
+<!--bootstarp carousel -->
+
+{% if sliders %}
+  <div style='margin-bottom: 20px;'>
+            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+          <!-- Indicators -->
+          <ol class="carousel-indicators">
+           {% for slider in sliders %}
+            <li data-target="#carousel-example-generic" data-slide-to="{{ forloop.counter|add:"-1" }}"{% if forloop.first %}class="active"{% endif %}>
+            </li>
+            {% endfor %}
+          </ol>
+
+          <!-- Wrapper for slides -->
+          <div class="carousel-inner" role="listbox">
+
+            {% for slider in sliders %}
+              <div class="item {% if forloop.first %}active{% endif %}">
+                {% if slider.url_link %}<a href='{{ slider.url_link }}'>{% endif %}
+              <img style="width: 1200px; height: 400px;" src="{{ slider.get_image_url }}" alt="...">
+                {% if slider.url_link %}</a>{% endif %}
+              <div class="carousel-caption">
+                  {% if slider.header_text %}
+                  <h1>{{ slider.header_text|safe }}</h1>
+                  {% endif %}
+                  {% if slider.text %}
+                  <p>{{ slider.text|safe }}</p>
+                  {% endif %}
+            
+              </div>
+            </div>
+
+            {% endfor %}
+  
+          </div>
+
+          <!-- Controls -->
+          <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+
+    </div>
+
+    {% endif %}
+
+<!-- carousel ends here -->
+
+
+{% endblock %}
+
+{% block content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+<!-- product display -->
+
+{% for sub_cat_parent in sub_cat_parent %}
+    <p>{{sub_cat_parent}}</p>
+    <div class="owl-carousel recent-views">
+    	{% for product in products|filter_products:sub_cat_parent %}
+      {% for variation in product.variation_set.all %}
+        
+  				<div class="item row">
+            <div class="col-md-12" style="margin-right: 0px; margin-left: 0px;">
+              
+              <div class="col-md-12">
+                <a href='{% url "single_product" variation.product.slug variation.id %}'>
+                  {% for img in  variation.productimage_set.all|filter_product_images:variation.product %}
+                    <img class="img-responsive" src='{{ MEDIA_URL }}{{ img.image }}'>
+                  {% endfor %}
+                </a>
+              </div>
+              <div>
+                <a href='{% url "single_product" variation.product.slug variation.id %}'><p class="col-md-12">{{ variation.product.title }} - {{ variation.storage }}, {{ variation.color }}</p></a>
+              </div>
+
+            </div>
+  			  </div>
+        
+      {% endfor %}    
+    	{% endfor %}
+    </div>
+{% endfor %}
+
+
+{% if request.user and recent_views.count > 0 %}
+<p>Recent Views</p>
+<div id="recent-views" class="owl-carousel recent-views">
+  {% for variation in recent_views|filter_unique_products %}
+      <div class="item thumbnail">
+        <a href='{% url "single_product" variation.product.slug variation.id %}'>
+            <img style="width: 242px; height: 200px; background-size: cover; background-repeat: no-repeat; background-position: center;" src='{{ MEDIA_URL }}{{ variation|get_thumbnail_img }}'>
+        </a>
+      </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+
+{% if popular_products.count > 0 %}
+<p>Popular Products</p>
+<div class="owl-carousel recent-views">
+  {% for product in popular_products|filter_popular_products %}
+      <div class="item thumbnail">
+        <a href='{% url "single_product" product.variation.product.slug product.variation.id %}'>
+            <img style="width: 242px; height: 200px; background-size: cover; background-repeat: no-repeat; background-position: center;" src='{{ MEDIA_URL }}{{ product.variation|get_thumbnail_img }}'>
+        </a>
+      </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- Product display end-->
+
+  <link rel="stylesheet" type="text/css" href="{% static 'css/owl.carousel.css' %}"/>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/owl.theme.default.min.css' %}"/>
+
+  <script type="text/javascript" src="{% static 'js/owl.carousel.min.js' %}"></script>
+
+
+<!-- owl carousel script -->
+<script>
+// $('.owl-carousel').owlCarousel({
+//     rtl:true,
+//     loop:true,
+//     margin:30,
+//     nav:true,
+//     responsive:{
+//         0:{
+//             items:1
+//         },
+//         600:{
+//             items:3
+//         },
+//         1000:{
+//             items:4
+//         }
+//     }
+// })
+
+    var product_slider = $(".recent-views");
+
+    product_slider.owlCarousel({
+      rewindNav : false,
+      pagination : false,
+      loop: false,
+      responsiveClass: true,
+      margin: 10,
+      slideBy: 2,
+      dotsEach: true,
+      lazyLoad: false,
+      nav: true,
+      responsive:{
+          0:{ 
+              center: true,
+              stagePadding: 10,
+              loop: true,
+              items: 1, // display 2 items in small device
+          },
+          480:{
+              center: true,
+              stagePadding: 10,
+              loop: true,
+              items: 3, // display 4 items in a small-medium device
+          },
+          768:{
+              center: true,
+              stagePadding: 10,
+              loop: true,
+              items: 5, // display 6 items in a medium device
+          },
+          992:{
+              items: 7, // display 8 items in large device
+          }
+      },
+
+    });
+    
+
+    $(".recent-views").owlCarousel(); // Owl initializer function
+
+</script>
+
+
+
+
+{% endblock %}

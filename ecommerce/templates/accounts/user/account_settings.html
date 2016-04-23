@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% load staticfiles accounts_custom_filter %}
+{% block content %}
+  
+    <div class="row" style="margin: 30px 0px 30px 0px;">
+      <div id="sidebar" class="col-md-2 col-lg-3">
+        <div class="list-group">
+          <a href="#" class="list-group-item active">
+            {{request.user.username}}
+            <br>
+            {{request.user.email}}
+          </a>
+          <div class="custom_sidebar" style="padding-top: 20px;">
+            <a href="{% url "user_orders" %}" class="list-group-item 1">My Orders</a>
+            <a href="{% url "view_user_address" %}" class="list-group-item 2">My Addresses</a>
+            <a href="{% url "view_wist_list" %}" class="list-group-item 3">Wish List</a>
+            <a href="{% url "account_settings" %}" class="list-group-item 4">Account Settings</a>
+          </div>
+        </div>
+      </div>
+
+        <div class="col-md-10 col-md-9" style="background: #FFF; padding: 30px 40px 30px 40px; border-bottom: 1px solid #eee;">
+            <div class="col-md-10 col-lg-11">
+                <p style="font-size: 20px; color: #222;">Account Information</p>
+                <p><strong>Email: </strong><span id="displayEmail">{{user.email}}</span></p>
+                <p><strong>Password: </strong>* * * * * *</p>
+            </div>
+            <div class="col-md-2 col-lg-1">
+                <button type="button" class="btn btn-primary btn-lg" onclick="this.blur();" data-toggle="modal" data-target="#ModalFirst">Edit</button>
+            </div>
+            
+        </div>
+        
+        <div class="col-md-10 col-md-9" style="background: #FFF; padding: 30px 40px 30px 40px; border-bottom: 1px solid #eee;">
+            <div class="col-md-10 col-lg-11">
+                <p style="font-size: 20px; color: #222;">Account Information</p>
+                <p><strong>Name: </strong><span id="displayName">{% if user_info.name != None %}{{user_info.name}}{% endif %}</span></p>
+                <p><strong>User Name: </strong>{{user.username}}</p>
+                <p><strong>Gender: </strong><span id="displayGender">{{user_info.gender}}</span></p>
+            <!--<p><strong>Birthdate: </strong>{{user_info.birthdate}}</p>-->
+                <p><strong>Country of Residence: </strong><span id="displayCountry">{{user_info.country}}</span></p>
+            </div>
+            <div class="col-md-2 col-lg-1">
+                <button type="button" class="btn btn-primary btn-lg" onclick="this.blur();" data-toggle="modal" data-target="#ModalSecond" id="editSecond">Edit</button>
+            </div>
+        </div>
+
+        <div id="sidebar" class="col-md-2 col-lg-3">
+          
+        </div>
+
+        <div class="col-md-10 col-md-9" style="background: #FFF; padding: 30px 40px 30px 40px; border-bottom: 1px solid #eee;">
+            <p style="font-size: 20px; color: #222; pull-right">Connecting with Facebook</p>
+            <p><strong>Why connect?</strong></p>
+            <p>- Sign In to Omkarts.com with one click only.</p>
+            <p>- Easily share what you buy on Omkarts.com, your wish lists and reviews on products with your friends on Facebook.</p>
+            <p><strong>Omkarts.com protects your privacy</strong>
+            <p>- Omkarts.com will not share any information from your account with Facebook.</p>
+            <p>- Omkarts.com will never post anything to your Facebook Wall/Timeline without your permission.</p>
+            <p>- Omkarts.com will never contact your Facebook friends without your permission.</p>
+            
+            <a href="www.facebook.com" style="width: 272px;"><p style="background-image: url('{% static "img/connect_with_facebook.png" %}'); background-repeat: no-repeat; font-size: 17px; color: #fff; padding: 4px 0px 0px 54px; height: 33px; width: 272px;" >Connect With Facebook</p></a>
+        </div>
+
+    </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="ModalFirst" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Edit your account info</h4>
+      </div>
+      <form action="{% url 'user_account_info_update' %}" method="POST" id="save_account_info_form">
+            {% csrf_token %}
+            <div class="modal-body">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Email address</label>
+                    <input name="email" id="email" type="email" class="form-control" id="exampleInputEmail1" placeholder="Email" value="{{user.email}}">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword">Old Password</label>
+                    <input name="old_password" id="old_password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">New Password</label>
+                    <input name="new_password" id="new_password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword2">Confirm Password</label>
+                    <input name="confirm_password" id="confirm_password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                  </div>
+            </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" id="save_account_info" class="btn btn-default">Save</button>
+          </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="ModalSecond" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Edit your personal info</h4>
+      </div>
+      <form action="{% url 'user_personal_info_update' %}" id="save_personal_info_form" method="POST">
+            {% csrf_token %}
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="usr">Name:</label>
+                    <input id="name" type="text" class="form-control" id="usr" {% if user_info.name != None %}value="{{user_info.name}}">{% endif %}
+                </div>
+                <div class="form-group">
+                    <label>Gender</label>
+                    {% if user_info.gender == "Male" %}
+                        <div class="radio">
+                            <label><input type="radio" name="gender" value="Male" checked>Male</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="gender" value="Female">Female</label>
+                        </div>
+                    
+                    {% elif user_info.gender == "Female" %}
+                        <div class="radio">
+                            <label><input type="radio" name="gender" value="Male">Male</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="gender" value="Female" checked>Female</label>
+                        </div>
+                    {% else  %}
+                        <div class="radio">
+                            <label><input type="radio" name="gender" value="Male">Male</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="gender" value="Female">Female</label>
+                        </div>
+                    {% endif %}
+                </div>
+                <!--<div class="form-group">
+                    <label>Birthday</label>
+                    <input type="date" id="birthday" class="form-control" placeholder="Date">
+                    </div>
+                -->
+                <div class="form-group">
+                    <label for="sel1">Country</label>
+                    <select class="form-control" id="sel1">
+                            <option class="select_option">India</option>
+                    </select>
+                </div>
+            </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" id="save_personal_info" class="btn btn-default">Save</button>
+          </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript" src="{% static 'js/user.js' %}"></script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+

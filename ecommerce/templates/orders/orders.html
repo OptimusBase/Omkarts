@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load staticfiles orders_custom_filter %}
+{% block content %}
+    <div class="row" id="side_bar_wrapper">
+      <div id="sidebar" class="col-md-2 col-lg-3">
+        <div class="list-group">
+          <a href="#" class="list-group-item active">
+            {{request.user.first_name}}
+            <br>
+            <p>{{request.user.email}}</p>
+          </a>
+          <div class="custom_sidebar">
+            <a href="{% url "user_orders" %}" class="list-group-item 1">My Orders</a>
+            <a href="{% url "view_user_address" %}" class="list-group-item 2">My Addresses</a>
+            <a href="{% url "view_wist_list" %}" class="list-group-item 3">Wish List</a>
+            <a href="{% url "account_settings" %}" class="list-group-item 4">Account Settings</a>
+          </div>
+        </div>
+      </div>
+        
+      <div class="col-md-10 col-md-9">
+          {% for order in orders %}
+          <div class="orders">
+            <p class="order_id_total">Order: {{order.order_id}} <span class="pull-right">Order Status: {{order.status}}</span></p>
+           
+            
+            {% for cart in order|filter_cartitems %}
+            {% for img in cart.variation.productimage_set.all|filter_product_images:cart.variation.product %}
+            <div class="row order_details">
+              
+              <div class="col-md-2 product_img">  
+                <a href="{% url "single_product" cart.variation.product.slug cart.variation.id %}">
+                  <img id="order_product_image" src="{{ MEDIA_URL }}{{ img }}">
+                </a>
+              </div>
+
+              <div class="col-md-4 product_name">
+                  <a href="{% url "single_product" cart.variation.product.slug cart.variation.id %}">{{cart.variation.product}} - {{cart.variation.storage}}, {{cart.variation.color}}, {{cart.variation.screen_size}}</a>
+                  <div class="row">
+                      <p class="col-md-6">Qty: {{cart.quantity}}</p>
+                      <p class="col-md-6">Rs. {{cart.line_total}}</p>
+                  </div>
+                  
+              </div>
+
+              <div class="col-md-2 product_price">
+                
+              </div>
+
+              <div class="col-md-2 product_date">
+                  <p>Date: {{cart.updated}}</p>
+              </div>
+
+              <div class="col-md-2 product_date">
+                  <p>Rs. {{ cart.quantity|multiply:cart.line_total }}</p>
+              </div>
+
+            </div>
+            {% endfor %}
+            {% endfor %}
+                  <p class="order_id_total pull-right">Order Total: {{order.sub_total}} + {{order.tax_total}} (Tax) = {{order.final_total}}</p>
+            <br>
+            <br>
+          </div>
+          {% endfor %}
+
+      </div>
+    </div>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/order.css' %}" />
+    <script type="text/javascript" src="{% static 'js/order.js' %}"></script>
+
+{% endblock %}
+
+
+
+
+

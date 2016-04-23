@@ -1,0 +1,34 @@
+#indicator li {
+    width: 15px;
+    height: 15px;
+    background-color: #BCE9F7;
+}
+
+#indicator .active {
+    width: 17px;
+    height: 17px;
+    margin: 0;
+    background-color: #5bc0de;
+}
+
+#indicator{
+   bottom: -55px;
+}
+
+.slider_title{
+    color: white;
+    padding: 15px;
+    background-color: #252933;
+}
+
+    
+.slider_title h4{
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.owl-item{
+    width: 221px !important;
+    /*margin-left: 15px !important;
+    margin-right: 15px !important;*/
+}
