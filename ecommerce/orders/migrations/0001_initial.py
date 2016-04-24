@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
+from django.db import migrations, models
 from django.conf import settings
 
 
@@ -31,8 +31,5 @@ class Migration(migrations.Migration):
                 ('shipping_address', models.ForeignKey(related_name='shipping_address', default=1, to='accounts.UserAddress')),
                 ('user', models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
     ]

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
+from django.db import migrations, models
 import marketing.models
 
 
@@ -22,7 +22,6 @@ class Migration(migrations.Migration):
                 ('header_text', models.CharField(max_length=120, null=True, blank=True)),
                 ('text', models.CharField(max_length=120, null=True, blank=True)),
                 ('active', models.BooleanField(default=False)),
-                ('featured', models.BooleanField(default=False)),
                 ('timestamp', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
                 ('start_date', models.DateTimeField(null=True, blank=True)),
@@ -33,7 +32,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'All Category Slider',
                 'verbose_name_plural': 'All Category Slider',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='CategorySlider',
@@ -45,7 +43,6 @@ class Migration(migrations.Migration):
                 ('header_text', models.CharField(max_length=120, null=True, blank=True)),
                 ('text', models.CharField(max_length=120, null=True, blank=True)),
                 ('active', models.BooleanField(default=False)),
-                ('featured', models.BooleanField(default=False)),
                 ('timestamp', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
                 ('start_date', models.DateTimeField(null=True, blank=True)),
@@ -57,7 +54,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Each Category Slider',
                 'verbose_name_plural': 'Each Category Slider',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='MarketingMessage',
@@ -74,7 +70,6 @@ class Migration(migrations.Migration):
             options={
                 'ordering': ['-start_date', '-end_date'],
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Slider',
@@ -86,7 +81,6 @@ class Migration(migrations.Migration):
                 ('header_text', models.CharField(max_length=120, null=True, blank=True)),
                 ('text', models.CharField(max_length=120, null=True, blank=True)),
                 ('active', models.BooleanField(default=False)),
-                ('featured', models.BooleanField(default=False)),
                 ('timestamp', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
                 ('start_date', models.DateTimeField(null=True, blank=True)),
@@ -97,6 +91,5 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Home Page Slider',
                 'verbose_name_plural': 'Home Page Slider',
             },
-            bases=(models.Model,),
         ),
     ]

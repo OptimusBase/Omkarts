@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
@@ -19,9 +19,6 @@ class Migration(migrations.Migration):
                 ('active', models.BooleanField(default=True)),
                 ('sub_cat_parent', models.OneToOneField(default=b'', to='products.SubCategoryParent')),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='ProductFilterAttributes',
@@ -31,8 +28,5 @@ class Migration(migrations.Migration):
                 ('filter_field', models.ForeignKey(default=b'', to='product_description.PdpSpecificationType')),
                 ('product_filter', models.ForeignKey(to='product_filters.ProductFilter')),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
     ]

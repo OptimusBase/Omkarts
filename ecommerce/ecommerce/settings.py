@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
-from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
+# from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -23,8 +23,6 @@ SECRET_KEY = '99l%rq+pa0nwgdu-szr!wfqkaz7)oj*3^@l-ado@6cccqz%ti1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -69,17 +67,51 @@ INSTALLED_APPS = (
     'localflavor',
 )
 
+# MIDDLEWARE_CLASSES = (
+#     'django.contrib.sessions.middleware.SessionMiddleware',
+#     'django.middleware.common.CommonMiddleware',
+#     'django.middleware.csrf.CsrfViewMiddleware',
+#     'django.contrib.auth.middleware.AuthenticationMiddleware',
+#     'django.contrib.messages.middleware.MessageMiddleware',
+#     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+#     'marketing.middleware.DisplayMarketing',
+# )
+
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'marketing.middleware.DisplayMarketing',
+    'django.middleware.security.SecurityMiddleware',
 )
-
 ROOT_URLCONF = 'ecommerce.urls'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+
+                # Django suit values ..
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+
+            ],
+        },
+    },
+]
+
 
 WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
@@ -107,18 +139,18 @@ USE_L10N = True
 
 USE_TZ = True
 
-TEMPLATE_CONTEXT_PROCESSORS = TCP + (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.request",
-    "django.core.context_processors.static",
-    "django.core.context_processors.tz",
-    'django.core.context_processors.request',
-    "django.contrib.messages.context_processors.messages",
-    # 'django.core.context_processors.request',
-)
+# TEMPLATE_CONTEXT_PROCESSORS = TCP + (
+#     "django.contrib.auth.context_processors.auth",
+#     "django.core.context_processors.debug",
+#     "django.core.context_processors.i18n",
+#     "django.core.context_processors.media",
+#     "django.core.context_processors.request",
+#     "django.core.context_processors.static",
+#     "django.core.context_processors.tz",
+#     'django.core.context_processors.request',
+#     "django.contrib.messages.context_processors.messages",
+#     # 'django.core.context_processors.request',
+# )
 
 # AUTHENTICATION_BACKENDS = (
 #     'django.contrib.auth.backends.ModelBackend',
@@ -139,9 +171,9 @@ STATICFILES_DIRS = (
     os.path.join(os.path.dirname(BASE_DIR), "static", "static_files"),
 )
 
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'templates'),
-)
+# TEMPLATE_DIRS = (
+#     os.path.join(BASE_DIR, 'templates'),
+# )
 
 MARKETING_HOURS_OFFSET = 3
 MARKETING_SECONDS_OFFSET = 8

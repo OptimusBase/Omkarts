@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
+from django.db import migrations, models
 from django.conf import settings
 
 
@@ -21,21 +21,15 @@ class Migration(migrations.Migration):
                 ('confirmed', models.BooleanField(default=False)),
                 ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='EmailMarketingSignUp',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('email', models.EmailField(max_length=75)),
+                ('email', models.EmailField(max_length=254)),
                 ('timestamp', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='RecentViews',
@@ -43,12 +37,9 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('timestamp', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
-                ('product', models.ForeignKey(blank=True, to='products.Product', null=True)),
                 ('user', models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('variation', models.ForeignKey(blank=True, to='products.Variation', null=True)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='UserAddress',
@@ -71,7 +62,6 @@ class Migration(migrations.Migration):
             options={
                 'ordering': ['-updated', '-timestamp'],
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='UserDefaultAddress',
@@ -81,9 +71,6 @@ class Migration(migrations.Migration):
                 ('shipping', models.ForeignKey(related_name='user_address_shipping_default', blank=True, to='accounts.UserAddress', null=True)),
                 ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='UserInformation',
@@ -97,9 +84,6 @@ class Migration(migrations.Migration):
                 ('updated', models.DateTimeField(auto_now=True, null=True)),
                 ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='UserStripe',
@@ -108,9 +92,6 @@ class Migration(migrations.Migration):
                 ('stripe_id', models.CharField(max_length=128, null=True, blank=True)),
                 ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='WishList',
@@ -123,8 +104,5 @@ class Migration(migrations.Migration):
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
                 ('variation', models.ForeignKey(blank=True, to='products.Variation', null=True)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
     ]
