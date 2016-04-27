@@ -28,7 +28,7 @@
 		      <div style="/*height: 235px;8? padding: 0px 0px 0px 0px; margin: 10px 10px 10px 10px;">
 		        <a href='{% url "single_product" variation.product.slug variation.id %}'>
 		          {% for img in  variation.productimage_set.all|filter_product_images:variation.product %}
-		            <img class="img-responsive" src='{{ MEDIA_URL }}{{ img.image }}'/>
+		            <img class="img-responsive" style="width: auto; height: auto; max-width: 160px; max-height: 170px; display: block; margin-left: auto; margin-right: auto;" src='{{ MEDIA_URL }}{{ img.image }}'/>
 		          {% endfor %}
 		        </a>
 		      </div>

@@ -2,6 +2,7 @@
 from django.contrib import admin
 
 from product_filters.models import ProductFilter, ProductFilterAttributes
+from import_export.admin import ImportExportMixin
 
 # Register your models here.
 
@@ -11,7 +12,7 @@ class ProductFilterAttributesInline(admin.StackedInline):
     extra = 0
 
 
-class ProductFilterAdmin(admin.ModelAdmin):
+class ProductFilterAdmin(ImportExportMixin, admin.ModelAdmin):
     inlines = [
         ProductFilterAttributesInline,
     ]
@@ -20,4 +21,10 @@ class ProductFilterAdmin(admin.ModelAdmin):
         model = ProductFilter
 
 admin.site.register(ProductFilter, ProductFilterAdmin)
-admin.site.register(ProductFilterAttributes)
+
+
+class ProductFilterAttributesAdmin(ImportExportMixin, admin.ModelAdmin):
+    class Meta:
+        model = ProductFilterAttributes
+
+admin.site.register(ProductFilterAttributes, ProductFilterAttributesAdmin)

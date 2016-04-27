@@ -73,7 +73,7 @@ right: 0;
 <!--bootstarp carousel -->
 
 {% if sliders %}
-  <div style='margin-bottom: 20px;'>
+  <div style='margin-bottom: 20px; width: 1000px;'>
             <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
           <!-- Indicators -->
           <ol class="carousel-indicators">
@@ -134,7 +134,7 @@ right: 0;
 
 {% for sub_cat_parent in sub_cat_parent %}
     <p>{{sub_cat_parent}}</p>
-    <div class="owl-carousel recent-views">
+    <div class="multiple-items">
     	{% for product in products|filter_products:sub_cat_parent %}
       {% for variation in product.variation_set.all %}
         
@@ -144,12 +144,12 @@ right: 0;
               <div class="col-md-12">
                 <a href='{% url "single_product" variation.product.slug variation.id %}'>
                   {% for img in  variation.productimage_set.all|filter_product_images:variation.product %}
-                    <img class="img-responsive" src='{{ MEDIA_URL }}{{ img.image }}'>
+                    <img class="img-responsive" style="width: auto; height: auto; max-width: 160px; max-height: 170px; display: block; margin-left: auto; margin-right: auto;" src='{{ MEDIA_URL }}{{ img.image }}'>
                   {% endfor %}
                 </a>
               </div>
               <div>
-                <a href='{% url "single_product" variation.product.slug variation.id %}'><p class="col-md-12">{{ variation.product.title }} - {{ variation.storage }}, {{ variation.color }}</p></a>
+                <a href='{% url "single_product" variation.product.slug variation.id %}'><p class="col-md-12" style="text-align: center;">{{ variation.product.title }} - {{ variation.storage }}, {{ variation.color }}</p></a>
               </div>
 
             </div>
@@ -163,12 +163,15 @@ right: 0;
 
 {% if request.user and recent_views.count > 0 %}
 <p>Recent Views</p>
-<div id="recent-views" class="owl-carousel recent-views">
+<div id="recent-views" class="multiple-items">
   {% for variation in recent_views|filter_unique_products %}
       <div class="item thumbnail">
         <a href='{% url "single_product" variation.product.slug variation.id %}'>
-            <img style="width: 242px; height: 200px; background-size: cover; background-repeat: no-repeat; background-position: center;" src='{{ MEDIA_URL }}{{ variation|get_thumbnail_img }}'>
+            <img class="img-responsive" style="width: auto; height: auto; max-width: 160px; max-height: 170px; display: block; margin-left: auto; margin-right: auto;" src='{{ MEDIA_URL }}{{ variation|get_thumbnail_img }}'>
         </a>
+        <div>
+          <a href='{% url "single_product" variation.product.slug variation.id %}'><p class="col-md-12" style="text-align: center;">{{ variation.product.title }} - {{ variation.storage }}, {{ variation.color }}</p></a>
+        </div>
       </div>
   {% endfor %}
 </div>
@@ -177,18 +180,24 @@ right: 0;
 
 {% if popular_products.count > 0 %}
 <p>Popular Products</p>
-<div class="owl-carousel recent-views">
-  {% for product in popular_products|filter_popular_products %}
+<div class="multiple-items">
+  {% for variations in popular_products|filter_popular_products %}
+  {% for variation in variations %}
       <div class="item thumbnail">
-        <a href='{% url "single_product" product.variation.product.slug product.variation.id %}'>
-            <img style="width: 242px; height: 200px; background-size: cover; background-repeat: no-repeat; background-position: center;" src='{{ MEDIA_URL }}{{ product.variation|get_thumbnail_img }}'>
+        <a href='{% url "single_product" variation.product.slug variation.id %}'>
+            <img class="img-responsive" style="width: auto; height: auto; max-width: 160px; max-height: 170px; display: block; margin-left: auto; margin-right: auto;" src='{{ MEDIA_URL }}{{ variation|get_thumbnail_img }}'>
         </a>
+        <div>
+          <a href='{% url "single_product" variation.product.slug variation.id %}'><p class="col-md-12" style="text-align: center;">{{ variation.product.title }} - {{ variation.storage }}, {{ variation.color }}</p></a>
+        </div>
       </div>
+  {% endfor %}   
   {% endfor %}
 </div>
 {% endif %}
 
 <!-- Product display end-->
+
 
   <link rel="stylesheet" type="text/css" href="{% static 'css/owl.carousel.css' %}"/>
   <link rel="stylesheet" type="text/css" href="{% static 'css/owl.theme.default.min.css' %}"/>

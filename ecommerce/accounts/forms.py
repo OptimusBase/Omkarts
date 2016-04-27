@@ -9,7 +9,8 @@ class UserAddressForm(forms.ModelForm):
     default = forms.BooleanField(label='Make Default')
     class Meta:
         model = UserAddress
-        fields = ["address", 
+        fields = ["name",
+                "address", 
                 "address2", 
                 "city", 
                 "state", 

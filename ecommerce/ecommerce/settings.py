@@ -48,15 +48,17 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'ckeditor',
-    # 'south', # no longer needed
-    # 'django.contrib.sites',
-    # 'allauth',
-    # 'allauth.account',
-    # 'allauth.socialaccount',
+    'django.contrib.sites',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
     # 'allauth.socialaccount.providers.facebook',
-    # 'smart_selects',
+    'ckeditor',
     'import_export',
+    'crispy_forms',
+    # 'smart_selects',
+
     'accounts',
     'carts',
     'marketing',
@@ -66,6 +68,25 @@ INSTALLED_APPS = (
     'product_filters',
     'localflavor',
 )
+
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+LOGIN_REDIRECT_URL = "/"
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+
+CRISPY_TEMPLATE_PACK = "bootstrap3"
 
 # MIDDLEWARE_CLASSES = (
 #     'django.contrib.sessions.middleware.SessionMiddleware',

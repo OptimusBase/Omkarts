@@ -20,8 +20,9 @@ class Category(models.Model):
 
     slug = models.SlugField(
         unique=True,
-        null=True,
-        blank=True)
+        default="",
+        null=False,
+        blank=False)
 
     featured = models.BooleanField(
         default=False)
@@ -61,8 +62,9 @@ class SubCategoryParent(models.Model):
 
     slug = models.SlugField(
         unique=True,
-        null=True,
-        blank=True)
+        default="",
+        null=False,
+        blank=False)
 
     featured = models.BooleanField(
         default=False)
@@ -102,8 +104,9 @@ class SubCategoryChild(models.Model):
 
     slug = models.SlugField(
         unique=True,
-        null=True,
-        blank=True)
+        default="",
+        null=False,
+        blank=False)
 
     featured = models.BooleanField(
         default=False)
@@ -138,8 +141,9 @@ class Brand(models.Model):
 
     slug = models.SlugField(
         unique=True,
-        null=True,
-        blank=True)
+        default="",
+        null=False,
+        blank=False)
 
     timestamp = models.DateTimeField(
         auto_now_add=True,

@@ -41,7 +41,7 @@ def orders(request):
 @login_required
 def checkout(request):
     """Checkout."""
-    import ipdb; ipdb.set_trace()
+    # import ipdb; ipdb.set_trace()
     try:
         the_id = request.session['cart_id']
         cart = Cart.objects.get(id=the_id)

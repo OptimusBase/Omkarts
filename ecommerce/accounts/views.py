@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.core import serializers
 
-from .models import EmailConfirmed, UserDefaultAddress, UserAddress, Product, WishList, UserInformation, Variation
+from .models import UserDefaultAddress, UserAddress, Product, WishList, UserInformation, Variation
 from .forms import LoginForm, RegistrationForm, UserAddressForm
 
 # Create your views here.
@@ -60,29 +60,29 @@ def registration_view(request):
 SHA1_RE = re.compile('^[a-f0-9]{40}$')
 
 
-def activation_view(request, activation_key):
-    if SHA1_RE.search(activation_key):
-        print "activation key is real"
-        try:
-            instance = EmailConfirmed.objects.get(activation_key=activation_key)
-        except EmailConfirmed.DoesNotExist:
-            instance = None
-            messages.success(request, "There was an error with ypur request.")
-            raise Http404
-        if instance is not None and not instance.confirmed:
-            page_message = "Confirmation Successfull! Welcome."
-            instance.activation_key = "Confirmed"
-            instance.confirmed = True
-            instance.save()
-            messages.success(request, "Successfully Confirmed. Please Login.")
-        elif instance is not None and instance.confirmed:
-            page_message = "Already Confirmed"
-            messages.success(request, "Already Registered.")
-        else:
-            page_message = ""
+# def activation_view(request, activation_key):
+#     if SHA1_RE.search(activation_key):
+#         print "activation key is real"
+#         try:
+#             instance = EmailConfirmed.objects.get(activation_key=activation_key)
+#         except EmailConfirmed.DoesNotExist:
+#             instance = None
+#             messages.success(request, "There was an error with ypur request.")
+#             raise Http404
+#         if instance is not None and not instance.confirmed:
+#             page_message = "Confirmation Successfull! Welcome."
+#             instance.activation_key = "Confirmed"
+#             instance.confirmed = True
+#             instance.save()
+#             messages.success(request, "Successfully Confirmed. Please Login.")
+#         elif instance is not None and instance.confirmed:
+#             page_message = "Already Confirmed"
+#             messages.success(request, "Already Registered.")
+#         else:
+#             page_message = ""
 
-    context = {"page_message": page_message}
-    return render(request, "accounts/activation_complete.html", context)
+#     context = {"page_message": page_message}
+#     return render(request, "accounts/activation_complete.html", context)
 
 
 @login_required
@@ -120,9 +120,12 @@ def add_user_address(request):
 def view_user_address(request):
     context = {}
     current_addresses = UserAddress.objects.filter(user=request.user)
-    primary_address = UserDefaultAddress.objects.get(user=request.user)
+    try:
+        primary_address = UserDefaultAddress.objects.get(user=request.user)
+    except:
+        primary_address = None
     context = {'current_addresses': current_addresses, "primary_address": primary_address}
-    template = "accounts/user.html"
+    template = "accounts/user_address.html"
     return render(request, template, context)
 
 
@@ -179,9 +182,9 @@ def add_wish_list(request):
 def view_wist_list(request):
     context = {}
     user = request.user
-    wish_list = WishList.objects.filter(user=user)
+    wish_list = WishList.objects.filter(user=user, active=True)
     context = {"wish_list": wish_list}
-    template = "accounts/user.html"
+    template = "accounts/user_wishList.html"
     return render(request, template, context)
 
 

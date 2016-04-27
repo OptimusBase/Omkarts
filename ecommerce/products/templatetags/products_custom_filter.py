@@ -1,6 +1,7 @@
 """"Filter."""
 from django import template
 from products.models import Product, SubCategoryParent, Brand, Variation
+from accounts.models import RecentViews
 from django.template.defaultfilters import slugify
 from collections import Counter
 register = template.Library()
@@ -79,19 +80,25 @@ def filter_popular_products(recent_views):
     items = []
     item_id = []
     items_list = []
-    count = Counter(recent_views)
-    popular_products = count.most_common(10)
+    
+    new_variation_id_list = []
 
-    for x in range(0, len(popular_products)):
-        items_list.append(popular_products[x][0])
+    for i in recent_views:
+        new_variation_id_list.append(i.variation.id)
 
-    recent_views = items_list
+    count = Counter(new_variation_id_list)
+    popular_products = count.most_common(5)
 
+    # for x in range(0, len(popular_products)):
+    #     items_list.append(popular_products[x][0])
+
+    recent_views = popular_products
     for recent_view in recent_views:
-        if not recent_view.variation.id in item_id:
-            items.append(recent_view)
-            item_id.append(recent_view.variation.id)
-
+        if not recent_view[0] in item_id:
+            variation = Variation.objects.filter(id=recent_view[0])
+            # view = RecentViews.objects.get(variation=variation)
+            items.append(variation)
+            item_id.append(recent_view[0])
     return items
 
 

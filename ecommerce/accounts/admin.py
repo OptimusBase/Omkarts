@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import UserStripe, EmailConfirmed, EmailMarketingSignUp, UserAddress, UserDefaultAddress, WishList, UserInformation, RecentViews
+from .models import UserStripe, EmailMarketingSignUp, UserAddress, UserDefaultAddress, WishList, UserInformation, RecentViews
 
 
 class UserAddressAdmin(admin.ModelAdmin):
@@ -12,7 +12,7 @@ admin.site.register(UserAddress, UserAddressAdmin)
 
 admin.site.register(UserStripe)
 
-admin.site.register(EmailConfirmed)
+# admin.site.register(EmailConfirmed)
 
 admin.site.register(UserDefaultAddress)
 

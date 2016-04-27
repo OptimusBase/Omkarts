@@ -1,12 +1,59 @@
 {% extends "base.html" %}
-
+{% load crispy_forms_tags %}
 {% block content %}
 
-<div class='col-sm-6 col-sm-offset-3' style='margin-top: 50px;'>
-	<form method='POST' action=''>{% csrf_token %}
-		{{ form.as_p }}
-		
-		<input type='submit' value='{%if submit_btn%}{{submit_btn}}{%else%}SUBMIT{%endif%}' class=btn btn-default>
-	</form>
+
+<div class="row" style="margin: 30px 0px 30px 0px;">
+	
+	<div id="sidebar" class="col-md-2 col-sm-2 col-lg-3">
+		<div class="list-group">
+		  <a href="#" class="list-group-item active">
+		    {{request.user.username}}
+		    <br>
+		    {{request.user.email}}
+		  </a>
+		  <div class="custom_sidebar" style="padding-top: 20px;">
+			  <a href="{% url "user_orders" %}" class="list-group-item 1">My Orders</a>
+			  <a href="{% url "view_user_address" %}" class="list-group-item 2">My Addresses</a>
+			  <a href="{% url "view_wist_list" %}" class="list-group-item 3">Wish List</a>
+			  <a href="{% url "account_settings" %}" class="list-group-item 4">Account Settings</a>
+		  </div>
+		</div>
+	</div>
+
+	<div class='col-md-8 col-sm-8' style=''>
+		<form method='POST' action=''>{% csrf_token %}
+			{{ form|crispy }}
+			
+			<input class="btn btn-primary" type='submit' value='{%if submit_btn%}{{submit_btn}}{%else%}SUBMIT{%endif%}'>
+		</form>
+		<br>
+	</div>
 </div>
+
 {% endblock %}
+
+
+<script type="text/javascript">
+{% block jquery %}
+
+	$(function() {
+	  debugger;
+	  var loc = window.location.href; // returns the full URL
+	  if(/wistlist/.test(loc)) {
+	    $(".1").removeClass("active");
+	    $(".2").removeClass("active");
+	    $(".3").addClass("active");
+	    $(".4").removeClass("active");
+	  }
+
+	  if(/address/.test(loc)) {
+	    $(".1").removeClass("active");
+	    $(".2").addClass("active");
+	    $(".3").removeClass("active");
+	    $(".4").removeClass("active");
+	  }
+	});
+
+{% endblock %}
+</script>

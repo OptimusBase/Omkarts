@@ -1,4 +1,6 @@
+
 $('input[type="checkbox"]').on('click', function() {
+	debugger;
 	window.location = $(this).val();
 });
 

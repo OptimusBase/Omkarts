@@ -16,10 +16,24 @@
 
 	<div class='row'>
 		<div class='col-md-2' style="background-color: #fff;">
+
+				{% if spec_type and spec_value %}
+					<br>
+					<button class="accordion">Clear Filer</button>
+					<div class="panel show">
+			
+							<div class="checkbox">
+							  <label>
+							  	<input class="clearFilterCheckbox" value="{% url 'category_page' category %}" name="" type="checkbox" id="">
+							  	Clear Filters
+							  </label>
+							</div>
+					</div>
+				{% endif %}
 		
 				{% for filters in product_filter %}
 
-					
+					<br>
 					<button class="accordion">{{filters.filter_field.specification_type}}</button>
 					<div class="panel show">
 						{% for spec in filters.filter_field.pdpspecification_set.all|unique_specs %}
@@ -48,6 +62,7 @@
 
 			<div class='col-md-12'>
 				{% for variation_list in variations %}
+				{% if spec_type and spec_value %}
 				{% for variation in variation_list|custom_product_filters_1:spec_type|custom_product_filters_2:spec_value %}
 				  <div class="col-sm-6 col-md-4">
 				    <div class="col-md-12" style="height:385px; background-color: #fff; margin-bottom: 15px; margin-right: 15px;">
@@ -65,6 +80,27 @@
 				    </div>
 				  </div>
 				 {% endfor %}
+				 {% else %}
+				 {% for variation in variation_list %}
+				  <div class="col-sm-6 col-md-4">
+				    <div class="col-md-12" style="height:385px; background-color: #fff; margin-bottom: 15px; margin-right: 15px;">
+
+				      {% for img in  variation.productimage_set.all|filter_product_images:variation.product %}
+				      	<div style="width: 200px; height:300px; margin: auto auto;">
+				      		<img style="width: 100%; height: 100%; padding: 10px 10px 10px 10px;" src="{{ MEDIA_URL }}{{ img.image }}" alt="">
+				      	</div>
+				      {% endfor %}
+
+				      <div class="caption">
+				        <p>{{ variation.product.title }} - {{ variation.storage }}, {{ variation.color }}</p>
+				        <h4>{{variation.price}}<span> INR</span></h4> 
+				      </div>
+				    </div>
+				  </div>
+				 {% endfor %}
+				 {% endif %}
+
+
 				 {% endfor %}
 			</div>
 		</div>

@@ -122,23 +122,25 @@
 
 		{% if popular_products.count > 0 %}
 		<h3>Popular Products</h3>
-		<div class="owl-carousel popular-products">
-		  {% for product in popular_products|filter_popular_products %}
+		<div class="multiple-items">
+		  {% for variations in popular_products|filter_popular_products %}
+  			{% for variation in variations %}
 		      <div class="item thumbnail" style="padding: 20px 20px 20px 20px; max-height: 450px; min-height: 350px;">
-		        <a href='{% url "single_product" product.variation.product.slug product.variation.id %}' style="text-decoration: none; color: black;">
+		        <a href='{% url "single_product" variation.product.slug variation.id %}' style="text-decoration: none; color: black;">
 		          
 		          
 		          	{% for img in variation.product.productimage_set.all|filter_product_images:variation.product %}
-		            	<img class="img-responsive" style="height: 200px; background-size: cover; background-repeat: no-repeat; background-position: center;" src='{{ MEDIA_URL }}{{ product.variation|get_thumbnail_img }}'>
+		            	<img class="img-responsive" style="height: 200px; background-size: cover; background-repeat: no-repeat; background-position: center;" src='{{ MEDIA_URL }}{{ variation|get_thumbnail_img }}'>
 		          	{% endfor %}
 		     		
 		     		<br>
-		            <h6 style="text-align: center;">{{ variation.product.title|truncatechars:60 }}</h6>
+		            <h6 style="text-align: center;">{{ variation.product.title|truncatechars:60 }} - {{ variation.storage }}, {{ variation.color }}</h6>
 		            <h5 style="text-align: center;">Rs.<strong> {{ variation.price }}</strong></h5>
 		          
 
 		        </a>
 		      </div>
+		  {% endfor %}
 		  {% endfor %}
 		</div>
 		{% endif %}

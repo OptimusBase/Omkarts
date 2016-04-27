@@ -81,7 +81,7 @@
                     <h3>{{sub_cat_parent}}</h3>
                       <ul class="nav nav-tabs">
                         {% for brand in sub_cat_parent|check_brands  %}
-                            <li {% if forloop.first %}class="active"{% endif %}><a data-toggle="tab" href="#{{brand.id}}">{{brand}}</a></li>
+                            <li class="cat-slider {% if forloop.first %}active{% endif %}"><a data-toggle="tab" href="#{{brand.id}}">{{brand}}</a></li>
                         {% endfor %}
                       </ul>
 
@@ -90,11 +90,11 @@
                         {% for brand in sub_cat_parent|check_brands  %}
                             <div id="{{brand.id}}" class="tab-pane fade in {% if forloop.first %}active{% endif %}">
                                 
-                                <div class="owl-carousel">
+                                <div class="multiple-items">
                                     {% for variation in variations|filter_category_products:sub_cat_parent|filter_products_2:brand %}
 
                                     {% for variant in  variation.productimage_set.all|filter_product_images:variation.product %}
-                                    <div class="item thumbnail row" style="padding: 20px 20px 20px 20px; height: 280px; width: 200px;">
+                                    <div class="thumbnail row" style="margin-left: 0px; margin-right: 0px;">
                                     <!--  <a href='{{ product.get_absolute_url }}'> -->
                                         <div class="col-md-12" style="height: 170px; width: 160px;">
                                             <a href='{% url "single_product" variation.product.slug variation.id %}'>
@@ -129,5 +129,15 @@
   <script type="text/javascript" src="{% static 'js/owl.carousel.min.js' %}"></script>
 
   <script type="text/javascript" src="{% static 'js/all_categories.js' %}"></script>
-
+    <script type="text/javascript">
+      $(".cat-slider").click(function(){
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                // alert("The paragraph was clicked.");
+                    var x = $('.multiple-items').length
+                    for (i=1;i<x;i++) { 
+                        $('.multiple-items')[i].slick.refresh()
+                    }
+            })
+        });
+  </script>
 {% endblock %}

@@ -1,4 +1,6 @@
-$('input[type="radio"]').on('click', function() {
+
+$('input[type="checkbox"]').on('click', function() {
+	debugger;
 	window.location = $(this).val();
 });
 
@@ -28,6 +30,7 @@ function getCheckedBoxes(chkboxName) {
 }
 
 $('.mycheckboxes').click(function() {
+	debugger;
 	var checkedBoxIds = getCheckedBoxes("mycheckboxes");
 
 	$.ajax({
