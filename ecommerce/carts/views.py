@@ -7,6 +7,7 @@ from .models import Cart, CartItem
 
 
 def view(request):
+    """VIew."""
     try:
         the_id = request.session['cart_id']
         cart = Cart.objects.get(id=the_id)
@@ -94,20 +95,42 @@ def add_to_cart(request, slug):
             # logger.error('variation quantity error, this error is caught in except block in add to cart')
             return HttpResponseRedirect(reverse("home"))
 
-        cart_item = CartItem.objects.create(
-            cart=cart,
-            product=product,
-            variation=variation,
-            line_total=variation.price)
+        user_cartitems_list = CartItem.objects.filter(cart=cart, active=True)
+        variant_added = False
+        if user_cartitems_list.count() > 0:
+            for item in user_cartitems_list:
+                if variant_added is False:
+                    if item.variation.id == variation.id:
+                        query = CartItem.objects.get(id=item.id)
+                        query.quantity += int(qty.encode('utf8'))
+                        query.save()
+                        variant_added = True
+
+                    else:
+                        cart_item = CartItem.objects.create(
+                            cart=cart,
+                            product=product,
+                            variation=variation,
+                            line_total=variation.price)
+                        cart_item.quantity = qty
+                        cart_item.save()
+                        variant_added = True
+        else:
+            cart_item = CartItem.objects.create(
+                cart=cart,
+                product=product,
+                variation=variation,
+                line_total=variation.price)
+            cart_item.quantity = qty
+            cart_item.save()
+            variant_added = True
 
         # if len(product_var) > 0:
         #     cart_item.variations.add(*product_var)
-        cart_item.quantity = qty
-        cart_item.save()
 
         # Removing Item from Wish list.
         try:
-            query = WishList.objects.get(variation=variation)
+            query = WishList.objects.get(user=request.user, variation=variation)
             query.active = False
             query.save()
         except:

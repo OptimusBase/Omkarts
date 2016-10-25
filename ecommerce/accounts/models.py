@@ -96,7 +96,7 @@ class UserAddress(models.Model):
 
     def get_address(self):
         """Get Address."""
-        return "%s, %s, %s, %s, %s" %(self.address, self.city, self.state, self.country, self.zipcode)
+        return "%s \n%s %s \n%s, %s - %s \n%s \n%s" % (self.name, self.address, self.address2, self.state, self.city, self.zipcode, self.country, self.phone)
 
     objects = UserAddressManager()
 

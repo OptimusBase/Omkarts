@@ -13,15 +13,18 @@ urlpatterns = patterns('',
     url(r'^products/$', 'products.views.all', name='products'),
     url(r'^category/(?P<slug>[\w-]+)/$', 'products.views.category_page', name='category_page'),
     url(r'^all_categories/$', 'products.views.all_categories', name='all_categories'),
-    
+
     url(r'^category/filter/(?P<category>[\w-]+)/(?P<spec_type_id>[\w-]+)/(?P<spec_value_id>[\w-]+)/$', 'products.views.category_page_filter_products', name='category_page_filter_products'),
-    
+
     url(r'^products/(?P<slug>[\w-]+)/(?P<id>\d+)/$', 'products.views.single', name='single_product'),
     url(r'^cart/(?P<id>\d+)/$', 'carts.views.remove_from_cart', name='remove_from_cart'),
     url(r'^cart/(?P<slug>[\w-]+)/$', 'carts.views.add_to_cart', name='add_to_cart'),
     url(r'^cart/$', 'carts.views.view', name='cart'),
     url(r'^checkout/$', 'orders.views.checkout', name='checkout'),
     url(r'^orders/$', 'orders.views.orders', name='user_orders'),
+
+    url(r'^return_product/(?P<order>\d+)/(?P<id>\d+)/$', 'orders.views.return_product', name='return_product'),
+
 
     url(r'^ajax/dismiss_marketing_message/$', 'marketing.views.dismiss_marketing_message', name='dismiss_marketing_message'),
     url(r'^ajax/email_signup/$', 'marketing.views.email_signup', name='ajax_email_signup'),

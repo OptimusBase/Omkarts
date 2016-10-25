@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import razorpay
 
 # from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -34,6 +35,25 @@ EMAIL_HOST_PASSWORD = 'n0vember1992'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
+DEFAULT_FROM_EMAIL = 'mohit.makhija77@gmail.com'
+
+# EMAIL_HOST = 'smtp.sendgrid.com'
+# EMAIL_HOST_USER = 'mohit911'
+# EMAIL_MAIN = 'info@Omkarts.com'
+# EMAIL_HOST_PASSWORD = 'n0vember1992,'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+
+
+# """
+# from django.conf import settings
+# from django.core.mail import send_mail
+
+# send_mail("subject", "here is the message", settings.EMAIL_MAIN, ["mohit_makhija@hotmail.com",], fail_silently=False)
+
+# """
+
+
 SITE_URL = "http://omkarts.com"
 if DEBUG:
     SITE_URL = "http://localhost:8000"
@@ -57,6 +77,8 @@ INSTALLED_APPS = (
     'ckeditor',
     'import_export',
     'crispy_forms',
+    'localflavor',
+    'tagulous',
     # 'smart_selects',
 
     'accounts',
@@ -66,7 +88,7 @@ INSTALLED_APPS = (
     'products',
     'product_description',
     'product_filters',
-    'localflavor',
+    'emailer',
 )
 
 SITE_ID = 1
@@ -107,6 +129,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'marketing.middleware.DisplayMarketing',
 )
 ROOT_URLCONF = 'ecommerce.urls'
 
@@ -198,11 +221,15 @@ STATICFILES_DIRS = (
 
 MARKETING_HOURS_OFFSET = 3
 MARKETING_SECONDS_OFFSET = 8
-DEFAULT_TAX_RATE = 0.08 # 8%
+DEFAULT_TAX_RATE = 0.08  # 8%
 
 STRIPE_SECRET_KEY = "sk_test_QodCjTce39UlPRCBjvc9aqQB"
 STRIPE_PUBLISHABLE_KEY = "pk_test_eoERCo5opxxiZeGP24wi7M1L"
 
+razor = razorpay.Client(auth=("rzp_test_cehukKDUuJhJ7k", "Ul8IV8NtFvrvxdOLjvfmgM7F"))
+
+RAZORPAY_KEY_ID = "rzp_test_cehukKDUuJhJ7k"
+RAZORPAY_SECRET_KEY = "Ul8IV8NtFvrvxdOLjvfmgM7F"
 # FACEBOOK_APP_ID='1083643738324083'
 # FACEBOOK_API_SECRET='7c58021fba32e7c806e7d9d051079144'
 

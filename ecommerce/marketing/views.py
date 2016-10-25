@@ -11,6 +11,7 @@ from accounts.models import EmailMarketingSignUp
 from .forms import EmailForm
 # Create your views here.
 
+
 def dismiss_marketing_message(request):
     if request.is_ajax():
         data = {"success": True}

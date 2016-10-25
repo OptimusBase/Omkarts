@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load staticfiles orders_custom_filter %}
+{% load staticfiles orders_custom_filter crispy_forms_tags %}
 {% block content %}
     <div class="row" id="side_bar_wrapper">
       <div id="sidebar" class="col-md-2 col-lg-3">
@@ -19,9 +19,9 @@
       </div>
         
       <div class="col-md-10 col-md-9">
-          {% for order in orders %}
+          {% for order in orders reversed %}
           <div class="orders">
-            <p class="order_id_total">Order: {{order.order_id}} <span class="pull-right">Order Status: {{order.status}}</span></p>
+            <p class="order_id_total">Order: {{order.order_id}} <span class="pull-right">Order Status: </span></p>
            
             
             {% for cart in order|filter_cartitems %}
@@ -40,7 +40,43 @@
                       <p class="col-md-6">Qty: {{cart.quantity}}</p>
                       <p class="col-md-6">Rs. {{cart.line_total}}</p>
                   </div>
-                  
+
+                  <a type="button" class="btn btn-primary btn-lg" onclick="this.blur();" data-toggle="modal" data-target="#{{order.order_id}}{{cart.variation.id}}">Return Product</a>
+
+                  <!-- Button trigger modal -->
+               <!--  <button type="button" class="btn btn-primary btn-lg" onclick="this.blur();" data-toggle="modal" data-target="#returnModal">
+                    Return Product
+                  </button>
+                -->
+
+                  <!-- Modal -->
+                  <div class="modal fade" id="{{order.order_id}}{{cart.variation.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                          <h4 class="modal-title" id="myModalLabel">Reason for return</h4>
+                        </div>
+
+                        <form method="POST" action='{% url "return_product" order.id cart.variation.id %}'>
+                          <div class="modal-body">
+                              <h4>Order no. - {{order.order_id}}</h4>
+                              <h4>Product - {{cart.variation.product}}</h4>
+                              <hr>
+                              
+                              {% csrf_token  %}
+                              {{ return_product|crispy }}
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <input class="btn btn-primary" type='submit' onclick="this.blur();" value='Submit'/>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+
+
               </div>
 
               <div class="col-md-2 product_price">
@@ -56,6 +92,7 @@
               </div>
 
             </div>
+            <hr style="border-top: 3px solid #eee;">
             {% endfor %}
             {% endfor %}
                   <p class="order_id_total pull-right">Order Total: {{order.sub_total}} + {{order.tax_total}} (Tax) = {{order.final_total}}</p>
