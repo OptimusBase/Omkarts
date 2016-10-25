@@ -12,6 +12,7 @@ $(document).ready(function() {
 				"csrfmiddlewaretoken": $('input[type=hidden][name=csrfmiddlewaretoken]').attr('value'),
 			},
 			success: function(data){
+				debugger;
   				if (data.stock == true){
   					$("#update-price").html("Rs. " + JSON.stringify(data.price));
   					$("#update-stock").html("" + data.qty);
